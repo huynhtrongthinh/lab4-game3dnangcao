@@ -121,6 +121,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 70
   damage: 20
+  hitEffectPrefab: {fileID: 8435628044080436055, guid: 70a591df829e5764f840d40bc9437a9a,
+    type: 3}
 --- !u!54 &4870552038550940558
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -1,9 +1,10 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
     public float speed = 70f;
-    public int damage = 20;  // S? l??ng damage g�y ra
+    public int damage = 20;
+    public GameObject hitEffectPrefab;
 
     private Transform target;
 
@@ -16,7 +17,7 @@ public class Bullet : MonoBehaviour
     {
         if (target == null)
         {
-            Destroy(gameObject);
+            ObjectPooler.Instance.ReturnToPool(gameObject);
             return;
         }
 
@@ -34,13 +35,44 @@ public class Bullet : MonoBehaviour
 
     void HitTarget()
     {
-        // G?i h�m TakeDamage c?a k? th�
-        Enemy enemy = target.GetComponent<Enemy>();
-        if (enemy != null)
+        if (target != null)
         {
-            enemy.TakeDamage(damage);
+            Enemy enemy = target.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(damage);
+            }
         }
 
-        Destroy(gameObject);  // H?y ??i t??ng ??n
+        // Lấy hiệu ứng va chạm từ Pool
+        if (hitEffectPrefab != null)
+        {
+            GameObject effectInstance = ObjectPooler.Instance.GetPooledObject(hitEffectPrefab, transform.position, Quaternion.identity);
+            effectInstance.SetActive(true);
+
+            ParticleSystem ps = effectInstance.GetComponent<ParticleSystem>();
+            if (ps != null)
+            {
+                ps.Play();
+                ObjectPooler.Instance.ReturnToPool(effectInstance, ps.main.duration);
+            }
+            else
+            {
+                ObjectPooler.Instance.ReturnToPool(effectInstance, 2f);
+            }
+        }
+
+        ObjectPooler.Instance.ReturnToPool(gameObject);
+    }
+
+    private void OnEnable()
+    {
+        CancelInvoke();
+        Invoke("DisableBullet", 5f); // Nếu không va chạm, tự động trả về Pool sau 5 giây
+    }
+
+    void DisableBullet()
+    {
+        ObjectPooler.Instance.ReturnToPool(gameObject);
     }
 }

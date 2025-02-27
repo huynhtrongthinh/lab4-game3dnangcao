@@ -56,14 +56,10 @@ public class Gun : MonoBehaviour
 
     void Shoot()
     {
-        GameObject bulletGO = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        Bullet bullet = bulletGO.GetComponent<Bullet>();
-
-        if (bullet != null)
-        {
-            bullet.Seek(target);
-        }
+        GameObject bullet = ObjectPooler.Instance.GetPooledObject(bulletPrefab, firePoint.position, firePoint.rotation);
+        bullet.GetComponent<Bullet>().Seek(target);
     }
+
 
     void OnDrawGizmosSelected()
     {

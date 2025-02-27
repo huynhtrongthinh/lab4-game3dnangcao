@@ -1,12 +1,12 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    public Transform[] path;  // C�c ?i?m tr�n ???ng ?i
-    public int health = 100;  // Th�m thu?c t�nh health
+    public Transform[] path;  // Các điểm trên đường đi
+    public int health = 100;  // Thêm thuộc tính health
     private NavMeshAgent agent;
     private int currentPathIndex = 0;
 
@@ -28,13 +28,13 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // H�m n�y ???c g?i khi k? th� b? t?n c�ng
+    // Hàm này được gọi khi kẻ thù bị tấn công
     public void TakeDamage(int damageAmount)
     {
         health -= damageAmount;
         if (health <= 0)
         {
-            Destroy(gameObject);  // H?y ??i t??ng khi health v? 0
+            Destroy(gameObject);  // Hủy đối tượng khi health về 0
         }
     }
 }
